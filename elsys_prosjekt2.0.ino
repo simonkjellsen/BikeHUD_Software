@@ -2,8 +2,8 @@
 bool blinkR=false;
 bool blinkL = false;
 
-int redPinR=15;
-int redPinL=14;
+int redPinR=14;
+int redPinL=15;
 
 const long interval=250;
 unsigned long prev_mil=0;
@@ -12,11 +12,9 @@ unsigned long blink_mil=0;
 int RedR = 255;
 int RedL = 255;
 
-bool gyro_1s=false; 
-bool gyro_rn=false; 
 int gyro_mil=0;
 int count=0;
-//bool gyro = false;
+bool gyro = false;
 
 #ifdef _ESP32_HAL_I2C_H_
 #define SDA_PIN 21
@@ -42,10 +40,11 @@ pinMode(26,INPUT);
 pinMode(redPinR, OUTPUT);
 pinMode(25,INPUT);
 pinMode(redPinL, OUTPUT);
-
 }
 
+
 void loop() {
+  uint8_t sensorId;
 if (digitalRead(25)==HIGH){
   if (blinkL){
     blinkL=false;
@@ -98,49 +97,53 @@ if(!blinkL){
 //Gyroskop
 if (millis()-gyro_mil>1000){
   gyro_mil=millis(); 
-  //gyro_1s=digitalRead(gyro); 
   if (getAccelZ()){
+    Serial.print("getaccel");
     count++;
-    //gyro=true;
+    gyro=true;
   }
   if (!getAccelZ()&&(count>0)){
+    Serial.print("ikke getaccel");
     blinkR=false;
     blinkL=false;
     count=0;
   }
   
 }
-if (getAccelZ()&&(blinkR||blinkL)){
-  //gyro_rn=digitalRead(gyro);
+if (gyro&&(blinkR||blinkL)){
   if (!getAccelZ()){
+    Serial.print("Gyro");
     blinkR=false;
     blinkL=false;
+    gyro = false;
+    count = 0;
   }
-}
+}  
+
 }
 
 bool getAccelZ(){
-   uint8_t sensorId;
-   if (mySensor.readId(&sensorId) == 0) {
-    Serial.println("sensorId: " + String(sensorId));
-  } else {
-    Serial.println("Cannot read sensorId");
-  }
+   
+//   if (mySensor.readId(&sensorId) == 0) {
+//    Serial.println("sensorId: " + String(sensorId));
+//  } else {
+//    Serial.println("Cannot read sensorId");
+//  }
 
   if (mySensor.accelUpdate() == 0) {
     aZ = mySensor.accelZ();
     Serial.println("accelZ: " + String(aZ));
-    
-  } else {
-    Serial.println("Cannod read accel values");
-  } 
+  
+//  } else {
+//    Serial.println("Cannod read accel values");
+//  } 
     if(aZ < -2.40){
       return true;
     }
     else {
       return false;
       }
-  Serial.println("at " + String(millis()) + "ms");
-  Serial.println(""); // Add an empty line
-  delay(1000);
+//  Serial.println("at " + String(millis()) + "ms");
+//  Serial.println(""); // Add an empty line
   }
+}

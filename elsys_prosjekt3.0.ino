@@ -1,9 +1,12 @@
 #include <MPU9250_asukiaaa.h>
+
 bool blinkR=false;
 bool blinkL = false;
 
 int ledR=14;
 int ledL=15;
+int btnR = 25;
+int btnL = 26;
 
 const long interval=250;
 unsigned long prev_mil=0;
@@ -36,40 +39,39 @@ void setup() {
 #endif
   mySensor.beginAccel();
 
-pinMode(26,INPUT);
+pinMode(btnR,INPUT);
 pinMode(ledR, OUTPUT);
-pinMode(25,INPUT);
+pinMode(btnL,INPUT);
 pinMode(ledL, OUTPUT);
 
-pinMode(13,OUTPUT); //HIGH KNAPP
+pinMode(13,OUTPUT); //HIGH
 digitalWrite(13,HIGH);
-
-pinMode(12,OUTPUT); //HIGH KNAPP
+pinMode(12,OUTPUT); //HIGH 
 digitalWrite(12,HIGH);
-
-pinMode(32,OUTPUT); //HIGH LED
+pinMode(32,OUTPUT); //HIGH 
 digitalWrite(32,HIGH);
-
-pinMode(27,OUTPUT); //HIGH LED
+pinMode(27,OUTPUT); //HIGH 
 digitalWrite(27,HIGH);
 
-pinMode(18,OUTPUT); //GROUND KNAPP
+pinMode(18,OUTPUT); //GROUND 
 digitalWrite(18,LOW);
-pinMode(19,OUTPUT); //GROUND KNAPP
+pinMode(19,OUTPUT); //GROUND 
 digitalWrite(19,LOW);
 
 }
 
 void loop() {
   
-  uint8_t sensorId;
-if (digitalRead(25)==HIGH){
+ uint8_t sensorId;
+  
+//right led
+if (btnR==HIGH){
   if (blinkL){
     blinkL=false;
   }
   blinkR=!blinkR;
   delay(200);}
-if (blinkR && ((millis()-prev_mil)>interval)){    //&& (millis()%1000==0)){
+if (blinkR && ((millis()-prev_mil)>interval)){    
 
 prev_mil=millis();
   if (RedR==255){
@@ -87,14 +89,14 @@ if(!blinkR){
 }
 
 //left led
-if (digitalRead(26)==HIGH){
+if (btnL==HIGH){
   if (blinkR){
     blinkR=false;
   }
   blinkL=!blinkL;
   delay(200);}
   
-if (blinkL && ((millis()-prev_mil)>interval)){    //&& (millis()%1000==0)){
+if (blinkL && ((millis()-prev_mil)>interval)){    
 
 prev_mil=millis();
   if (RedL==255){
@@ -112,7 +114,7 @@ if(!blinkL){
   digitalWrite(ledL,HIGH);
   }
 
-//Gyroskop
+//Accelerometer
 if (millis()-gyro_mil>1000){
   gyro_mil=millis(); 
   if (getAccelZ()){
@@ -121,7 +123,6 @@ if (millis()-gyro_mil>1000){
     gyro=true;
   }
   if (!getAccelZ()&&(count>0)){
-    Serial.print("ikke getaccel");
     blinkR=false;
     blinkL=false;
     count=0;
@@ -130,7 +131,6 @@ if (millis()-gyro_mil>1000){
 }
 if (gyro&&(blinkR||blinkL)){
   if (!getAccelZ()){
-    Serial.print("Gyro");
     blinkR=false;
     blinkL=false;
     gyro = false;
@@ -139,7 +139,7 @@ if (gyro&&(blinkR||blinkL)){
 }  
 }
 
-//Funksjon som heter accelZ
+//function getAccelZ
 bool getAccelZ(){
   if (mySensor.accelUpdate() == 0) {
     aZ = mySensor.accelZ();
@@ -148,7 +148,7 @@ bool getAccelZ(){
   } else {
     Serial.println("Cannod read accel values");
   }
-    if(aZ > -2.40){
+    if(aZ > -2.40){ //decided by testing
       return true;
     }
     else {

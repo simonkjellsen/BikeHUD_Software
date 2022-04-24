@@ -44,6 +44,7 @@ pinMode(ledR, OUTPUT);
 pinMode(btnL,INPUT);
 pinMode(ledL, OUTPUT);
 
+//Extra pins for Vcc
 pinMode(13,OUTPUT); //HIGH
 digitalWrite(13,HIGH);
 pinMode(12,OUTPUT); //HIGH 
@@ -52,7 +53,7 @@ pinMode(32,OUTPUT); //HIGH
 digitalWrite(32,HIGH);
 pinMode(27,OUTPUT); //HIGH 
 digitalWrite(27,HIGH);
-
+//Extra pins for ground
 pinMode(18,OUTPUT); //GROUND 
 digitalWrite(18,LOW);
 pinMode(19,OUTPUT); //GROUND 

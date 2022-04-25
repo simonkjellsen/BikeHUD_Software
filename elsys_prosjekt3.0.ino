@@ -147,7 +147,7 @@ bool getAccelZ(){
   } else {
     Serial.println("Cannod read accel values");
   }
-    if(aZ > -2.40){ //decided by testing
+    if(aZ > -2.40){ 
       return true;
     }
     else {

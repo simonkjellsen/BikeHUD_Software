@@ -19,19 +19,18 @@ int gyro_mil=0;
 int count=0;
 bool gyro = false;
 
+MPU9250_asukiaaa mySensor;
+float aZ;
+bool getAccelZ();
+
 #ifdef _ESP32_HAL_I2C_H_
 #define SDA_PIN 21
 #define SCL_PIN 22
 #endif
 
-MPU9250_asukiaaa mySensor;
-float aZ;
-bool getAccelZ();
-
 void setup() {
   Serial.begin(115200);
   while(!Serial);
-  Serial.println("started");
 
 #ifdef _ESP32_HAL_I2C_H_ // For ESP32
   Wire.begin(SDA_PIN, SCL_PIN);
@@ -119,7 +118,6 @@ if(!blinkL){
 if (millis()-gyro_mil>1000){
   gyro_mil=millis(); 
   if (getAccelZ()){
-    Serial.print("getaccel");
     count++;
     gyro=true;
   }
